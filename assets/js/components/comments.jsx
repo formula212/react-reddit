@@ -44,17 +44,17 @@ var Comment = React.createClass({
 	setActive: function () {
 		this.context.activeComment = this.props.data.id;
 		this.context.root.forceUpdate();
-		window.location.href = "/#comment-" + this.props.data.id;
+		window.location.hash = "comment-" + this.props.data.id;
 	},
 	
-	handleVoteSubmit: function (id, url, type) {
+	handleVoteSubmit: function (id, url, type, container) {
 		if (id == null) {
 			id = this.props.data.id;
 		} else {
 			url.unshift('child');
 		}
 		url.unshift(this.props.data.id);
-		this.props.onVoteSubmit(id, url, type);
+		this.props.onVoteSubmit(id, url, type, container);
 	},
 	
 	render: function () {
@@ -63,7 +63,8 @@ var Comment = React.createClass({
 				<Votes 
 					data={this.props.data}
 					user={this.props.user}
-					onVoteSubmit={this.handleVoteSubmit}/>
+					onVoteSubmit={this.handleVoteSubmit}
+					type='comment'/>
 				<div className="header">
 					<div className="commentAuthor">{this.props.data.author}</div>
 					<div className="date">&nbsp;on {new Date(this.props.data.date).toLocaleDateString("en-US", options)}</div>
@@ -100,8 +101,8 @@ var CommentList = React.createClass({
 		this.props.onCommentSubmit(comment, url);
 	},
 	
-	handleVoteSubmit: function (id, url, type) {
-		this.props.onVoteSubmit(id, url, type);
+	handleVoteSubmit: function (id, url, type, container) {
+		this.props.onVoteSubmit(id, url, type, container);
 	},
 	
 	render: function () {

@@ -3,6 +3,7 @@ var marked = require('marked');
 var $ = require('jquery');
 
 var PostForm = require('./postForm.jsx');
+var Votes = require('./votes.jsx');
 
 var options = {
     year: "numeric", month: "short",
@@ -14,11 +15,21 @@ var Post = React.createClass({
 		var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
 		return {__html: rawMarkup};
 	},
+	
+	handleVoteSubmit: function (id, url, type, component) {
+		id = this.props.data.id;
+		this.props.onVoteSubmit(id, url, type, component);
+	},
 
 	render: function () {
 		return (
 			<div className="post">
-					
+				<Votes 
+					data={this.props.data}
+					user={this.props.user}
+					onVoteSubmit={this.handleVoteSubmit}
+					type='post'/>
+			
 				<a href={this.props.data.link} className="title">{this.props.data.title}</a>
 				<div className="subtitle">
 					<div className="date">Submitted on {new Date(this.props.data.date).toLocaleDateString("en-US", options)}</div>
@@ -26,6 +37,9 @@ var Post = React.createClass({
 				</div>
 				
 				<div className="postBody" dangerouslySetInnerHTML={this.rawMarkup()}/>
+				<div className="postFooter">
+					<a href={"/" + this.props.data.id}>Read comments</a>
+				</div>
 			</div>
 		);
 	}
@@ -45,7 +59,6 @@ module.exports = React.createClass({
 			dataType: 'json',
 			cache: false,
 			success: function (data) {
-				console.log(data);
 				this.setState({user: data});
 			}.bind(this),
 			error: function (xhr, status, error) {
@@ -63,7 +76,7 @@ module.exports = React.createClass({
 				this.setState({data: data['posts']});
 			}.bind(this),
 			error: function (xhr, status, error) {
-				console.error(this.props.url, status, error.toString());
+				console.error('/api/posts', status, error.toString());
 			}.bind(this)
 		});
 	},
@@ -85,7 +98,32 @@ module.exports = React.createClass({
 			success: function () {
 			}.bind(this),
 			error: function (xhr, status, error) {
-				console.error(this.props.url, status, error.toString());
+				console.error('/api/posts', status, error.toString());
+			}.bind(this)
+		});
+	},
+	
+	handleVoteSubmit: function (id, url, type, container) {
+		var currComponent = this;
+		$.ajax({
+			url: '/api/votes',
+			json: true,
+			type: 'POST',
+			data: JSON.stringify(
+				{
+					id: id, 
+					url: url.join('/'),
+					type: type,
+					user: this.state.user.name,
+					currPost: '',
+					container: container
+				}),
+    		contentType: "application/json",
+			success: function () {
+				currComponent.loadUser();
+			}.bind(this),
+			error: function (xhr, status, error) {
+				console.error('/api/votes', status, error.toString());
 			}.bind(this)
 		});
 	},
@@ -99,7 +137,8 @@ module.exports = React.createClass({
 				<Post
 					key={posts[key].id} 
 					data={posts[key]} 
-					user={currComponent.props.user}>
+					user={currComponent.state.user}
+					onVoteSubmit={currComponent.handleVoteSubmit}>
 					{posts[key].text}
 				</Post>
 			);

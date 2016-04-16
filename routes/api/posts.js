@@ -31,9 +31,25 @@ router.route('/')
 			var post = req.body.post;
 			post['id'] = key;
 			
+			if (!post['link'])
+				post['link'] = '/' + post['id'];
+			
 			firebasePost.set(post);
 			res.end("Successfully added to firebase database!");
 		});
+	});
+
+router.route('/:id')
+	.get(function (req, res, next) {
+		res.setHeader('Content-Type', 'application/json');
+		var firebaseComment = new Firebase(firebaseUrl + "/posts/" + req.params.id);
+		firebaseComment.once('value', function (snapshot) {
+			var ret = snapshot.val();
+			if (ret == null)
+				ret = {};
+			res.send(JSON.stringify({'post': ret}));
+		});
+		
 	});
 
 module.exports = router;

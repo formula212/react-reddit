@@ -58,7 +58,6 @@ app.use("/api/posts", apiPostsRouter);
 app.use(express.static(__dirname));
 
 app.get('/:id', function (req, res, next) {
-	console.log(req.params.id);
 	var firebaseVal = new Firebase(firebaseUrl + "/posts/" + req.params.id);
 	firebaseVal.once('value', function (snapshot) {
 		if (snapshot.val() == null) {
@@ -67,7 +66,8 @@ app.get('/:id', function (req, res, next) {
 			});
 		} else {
 			res.render('post', {
-				title: snapshot.val()['title']
+				title: snapshot.val()['title'],
+				data: snapshot.val()
 			});
 		}
 	});

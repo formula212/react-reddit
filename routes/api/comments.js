@@ -4,9 +4,9 @@ var express = require('express');
 
 var router = express.Router();
 
-router.route('/')
+router.route('/:id')
 	.get(function (req, res, next) {
-		var firebaseVal = new Firebase(firebaseUrl + "/comments");
+		var firebaseVal = new Firebase(firebaseUrl + "/posts/" + req.params.id + "/comments");
 		var getComments = function (callback) {
 			firebaseVal.once('value', function (snapshot) {
 				callback(snapshot.val());
@@ -21,9 +21,8 @@ router.route('/')
 				res.send(JSON.stringify({'comments': []}));
 			return;
 		});
-	})
-	
-	.post(function (req, res, next) {
+	});
+router.route('').post(function (req, res, next) {
 		var firebaseCount = new Firebase(firebaseUrl);
 		firebaseCount.once('value', function (snapshot) {
 			var key = snapshot.val()['commentCount'];
@@ -31,8 +30,8 @@ router.route('/')
 			firebaseCount.update(
 				{commentCount: key + 1}
 			);
-
-			var firebaseComment = new Firebase(firebaseUrl + "/comments/" + req.body.url + "/" + key);
+			console.log(firebaseUrl + "/posts/" + req.body.currPost + "/comments/" + req.body.url + "/" + key);
+			var firebaseComment = new Firebase(firebaseUrl + "/posts/" + req.body.currPost + "/comments/" + req.body.url + "/" + key);
 
 			var comment = req.body.comment;
 			comment['id'] = key;

@@ -3,8 +3,8 @@ var React = require('react');
 module.exports = React.createClass({
 	getVote: function () {
 		var voteVal = 0;
-		if (this.props.user.val && this.props.user.val.votes && this.props.data.id in this.props.user.val.votes)
-			voteVal = this.props.user.val.votes[this.props.data.id];
+		if (this.props.user.val && this.props.user.val.votes && this.props.user.val.votes[this.props.type] && this.props.data.id in this.props.user.val.votes[this.props.type])
+			voteVal = this.props.user.val.votes[this.props.type][this.props.data.id];
 		return voteVal;
 	},
 	
@@ -14,7 +14,7 @@ module.exports = React.createClass({
 			alert("You are not logged in");
 			return;
 		}
-		this.props.onVoteSubmit(null, [], 1);
+		this.props.onVoteSubmit(null, [], 1, this.props.type);
 	},
 	
 	handleDownVote: function (e) {
@@ -23,7 +23,7 @@ module.exports = React.createClass({
 			alert("You are not logged in");
 			return;
 		}
-		this.props.onVoteSubmit(null, [], -1);
+		this.props.onVoteSubmit(null, [], -1, this.props.type);
 	},
 	
 	render: function () {
