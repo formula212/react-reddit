@@ -505,24 +505,25 @@ var Post = React.createClass({
 			'div',
 			{ className: 'post' },
 			React.createElement(
+				'a',
+				{ href: this.props.data.link, className: 'title' },
+				' ',
+				this.props.data.title
+			),
+			React.createElement(
 				'div',
-				{ className: 'header' },
-				React.createElement(
-					'div',
-					{ className: 'commentAuthor' },
-					this.props.data.author
-				),
+				{ className: 'subtitle' },
 				React.createElement(
 					'div',
 					{ className: 'date' },
-					' on ',
+					'Submitted on ',
 					new Date(this.props.data.date).toLocaleDateString("en-US", options)
 				),
 				React.createElement(
-					'a',
-					{ href: this.props.data.link, className: 'title' },
-					' ',
-					this.props.data.title
+					'div',
+					{ className: 'postAuthor' },
+					'  by ',
+					this.props.data.author
 				)
 			),
 			React.createElement('div', { className: 'postBody', dangerouslySetInnerHTML: this.rawMarkup() })

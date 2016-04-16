@@ -18,10 +18,11 @@ var Post = React.createClass({
 	render: function () {
 		return (
 			<div className="post">
-				<div className="header">
-					<div className="commentAuthor">{this.props.data.author}</div>
-					<div className="date">&nbsp;on {new Date(this.props.data.date).toLocaleDateString("en-US", options)}</div>
-					<a href={this.props.data.link} className="title">&nbsp;{this.props.data.title}</a>
+					
+				<a href={this.props.data.link} className="title">{this.props.data.title}</a>
+				<div className="subtitle">
+					<div className="date">Submitted on {new Date(this.props.data.date).toLocaleDateString("en-US", options)}</div>
+					<div className="postAuthor">&nbsp;by {this.props.data.author}</div>
 				</div>
 				
 				<div className="postBody" dangerouslySetInnerHTML={this.rawMarkup()}/>
