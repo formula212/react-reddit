@@ -55,7 +55,7 @@ module.exports = React.createClass({
 		return {
 			data: {},
 			formState: 2,
-			user: ''
+			user: {}
 		};
 	},
 	

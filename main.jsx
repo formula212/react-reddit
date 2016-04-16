@@ -8,8 +8,8 @@ var Home = require('./assets/js/components/home.jsx');
 
 
 ReactDOM.render(
-	<Home/>,
-	document.getElementById('home');
+	<Home pollInterval={2000}/>,
+	document.getElementById('home')
 );
 
 ReactDOM.render(

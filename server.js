@@ -11,7 +11,9 @@ var FileStore = require('session-file-store')(expressSession);
 var apiCommentsRouter = require('./routes/api/comments');
 var apiUsersRouter = require('./routes/api/users');
 var apiVotesRouter = require('./routes/api/votes');
+var apiPostsRouter = require('./routes/api/posts');
 
+var firebaseUrl = "https://jeffrey-xiao-reddit.firebaseio.com";
 var hostname = 'localhost';
 var port = 8080;
 
@@ -19,6 +21,9 @@ var srcPath = __dirname + '/assets';
 var destPath = __dirname + '/assets';
 
 var app = express();
+
+app.set('views', __dirname + '/views/pages');
+app.set('view engine', 'jade');
 
 //app.use(morgan('dev'));
 app.use(sassMiddleware({
@@ -39,11 +44,34 @@ app.use(expressSession({
 	store: new FileStore()
 }));
 
-app.use("/", express.static(__dirname + '/'));
+app.get('/', function (req, res, next) {
+	res.render('home', {
+		title: 'Front Page'
+	});
+});
 
 app.use("/api/comments", apiCommentsRouter);
 app.use("/api/users", apiUsersRouter);
 app.use("/api/votes", apiVotesRouter);
+app.use("/api/posts", apiPostsRouter);
+
+app.use(express.static(__dirname));
+
+app.get('/:id', function (req, res, next) {
+	console.log(req.params.id);
+	var firebaseVal = new Firebase(firebaseUrl + "/posts/" + req.params.id);
+	firebaseVal.once('value', function (snapshot) {
+		if (snapshot.val() == null) {
+			res.render('404', {
+				title: '404'	   
+			});
+		} else {
+			res.render('post', {
+				title: snapshot.val()['title']
+			});
+		}
+	});
+});
 
 app.listen(port, hostname, function () {
 	console.log("Server is running at http://" + hostname + "/" + port);
