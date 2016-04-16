@@ -1,6 +1,7 @@
 var React = require('react');
 var $ = require('jquery');
-var CommentList = require('./commentList.jsx');
+
+var CommentList = require('./comments.jsx').CommentList;
 var CommentForm = require('./commentForm.jsx');
 
 module.exports = React.createClass({

@@ -1,16 +1,16 @@
 var React = require('react');
 var marked = require('marked');
 
-var Votes = require('./votes.jsx');
 var CommentForm = require('./commentForm.jsx');
-var CommentList = require('./commentList.jsx');
+var Error = require('./error.jsx');
+var Votes = require('./votes.jsx');
 
 var options = {
     year: "numeric", month: "short",
     day: "numeric", hour: "2-digit", minute: "2-digit"
 }
 
-module.exports = React.createClass({
+var Comment = React.createClass({
 	contextTypes: {
 		activeComment: React.PropTypes.string,
 		root: React.PropTypes.object
@@ -89,3 +89,49 @@ module.exports = React.createClass({
 		);
 	}
 });
+
+var CommentList = React.createClass({
+	contextTypes: {
+		activeComment: React.PropTypes.string,
+		prevComponent: React.PropTypes.object
+	},
+	
+	handleCommentSubmit: function (comment, url) {
+		this.props.onCommentSubmit(comment, url);
+	},
+	
+	handleVoteSubmit: function (id, url, type) {
+		this.props.onVoteSubmit(id, url, type);
+	},
+	
+	render: function () {
+		if (this.props.data) {
+			var comments = this.props.data;
+			var currComponent = this;
+			var commentNodes = Object.keys(comments).map(function (key) {
+				return (
+					<Comment 
+						key={comments[key].id} 
+						data={comments[key]} 
+						onCommentSubmit={currComponent.handleCommentSubmit}
+						onVoteSubmit={currComponent.handleVoteSubmit}
+						user={currComponent.props.user}>
+						{comments[key].text}
+					</Comment>
+				);
+			});
+			return (
+				<div className="commentList">
+					{commentNodes}
+				</div>
+			);
+		} else {
+			return (<noscript/>);
+		}
+	}
+});
+
+module.exports = {
+	Comment: Comment,
+	CommentList: CommentList
+};

@@ -1,6 +1,6 @@
 var React = require('react');
 
-var Comment = require('./error.jsx');
+var Error = require('./error.jsx');
 
 module.exports = React.createClass({
 	getInitialState: function () {

@@ -26,10 +26,10 @@ router.route('/')
 	.post(function (req, res, next) {
 		var firebaseCount = new Firebase(firebaseUrl);
 		firebaseCount.once('value', function (snapshot) {
-			var key = snapshot.val()['count'];
+			var key = snapshot.val()['commentCount'];
 
 			firebaseCount.update(
-				{count: key + 1}
+				{commentCount: key + 1}
 			);
 
 			var firebaseComment = new Firebase(firebaseUrl + "/comments/" + req.body.url + "/" + key);

@@ -1,11 +1,10 @@
 var React = require('react');
+var Error = require('./error.jsx');
 
 module.exports = React.createClass({
 	render: function () {
 		return (
-			<div className="error">
-				{this.props.message}
-			</div>
+			<Error message={'this is an error message'}/>
 		);
 	}
 });
