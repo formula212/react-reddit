@@ -30,7 +30,7 @@ router.route('').post(function (req, res, next) {
 			firebaseCount.update(
 				{commentCount: key + 1}
 			);
-			console.log(firebaseUrl + "/posts/" + req.body.currPost + "/comments/" + req.body.url + "/" + key);
+
 			var firebaseComment = new Firebase(firebaseUrl + "/posts/" + req.body.currPost + "/comments/" + req.body.url + "/" + key);
 
 			var comment = req.body.comment;

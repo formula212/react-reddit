@@ -23,7 +23,6 @@ router.route('/').post(function (req, res, next) {
 
 	firebaseVote.once('value', function (snapshot) {
 		var prevCount = parseInt(snapshot.val()['votes']);
-		console.log(prevCount);
 		firebaseUser.once('value', function (snapshot) {
 			var prevVal = 0;
 			if (snapshot.val() != null && snapshot.val()[id] != null)
@@ -31,8 +30,6 @@ router.route('/').post(function (req, res, next) {
 
 			var newVote = {};
 			newVote[id] = type;
-			console.log('API CALL');
-			console.log(prevCount, type, prevVal);
 			firebaseUser.update(newVote);
 			firebaseVote.update({
 				votes: prevCount + type - prevVal

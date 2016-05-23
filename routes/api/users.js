@@ -7,7 +7,6 @@ var router = express.Router();
 
 router.route('/').get(function (req, res, next) {
 	res.setHeader('Content-Type', 'application/json');
-	console.log(req.session.user);
 	if (req.session.user != null && req.session.user != "") {
 		var firebaseVal = new Firebase(firebaseUrl + "/users/" + req.session.user + "/data/");
 		firebaseVal.once('value', function (snapshot) {

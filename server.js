@@ -44,6 +44,10 @@ app.use(expressSession({
 	store: new FileStore()
 }));
 
+app.get('/favicon.ico', function (req, res, next) {
+	res.status(404).send('Not Found');
+});
+
 app.get('/', function (req, res, next) {
 	res.render('home', {
 		title: 'Front Page'
